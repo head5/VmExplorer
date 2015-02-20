@@ -50,7 +50,7 @@
                 <asp:Button ID="btnClear" runat="server" Text="Clear" Width="65" OnClick="btnClear_Click" />
             </asp:TableCell>
             <asp:TableCell HorizontalAlign="Center" BorderWidth="0">
-                <asp:Button ID="btnSubmit" runat="server" Text="Submit Request" Width="120" />
+                <asp:Button ID="btnSubmit" runat="server" Text="Submit Request" Width="120" OnClick="btnSubmit_Click"/>
             </asp:TableCell>
         </asp:TableRow>
     </asp:Table>

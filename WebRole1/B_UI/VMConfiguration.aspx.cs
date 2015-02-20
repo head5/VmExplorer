@@ -11,18 +11,18 @@ namespace WebRole.B_UI
 {
     public partial class VMConfiguration : System.Web.UI.Page
     {
-        
+        User signInUser;
 
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-                //if (!(Session["USER"] == null))
-                //{
-                //    signInUser = (User)Session["USER"];
-                //}
+                if (!(Session["USER"] == null))
+                {
+                    signInUser = (User)Session["USER"];
+                }
 
-                User authUser = new User("M1015156", "Anand", "P@ssw0rd1", true, true);
+               // User authUser = new User("M1015156", "Anand", "P@ssw0rd1", true, true);
                 PopulateVMInstanceSizes();
                 PopulateVMOSImages();
             }
@@ -37,7 +37,17 @@ namespace WebRole.B_UI
 
         protected void btnCancel_Click(object sender, EventArgs e)
         {
-            Response.Redirect("~/B_UI/VMDashBoard.aspx.cs");
+            Response.Redirect("~/B_UI/VMDashBoard.aspx");
+        }
+
+        protected void btnSubmit_Click(object sender, EventArgs e)
+        {
+            if()
+            VMDetails vmdetails=new VMDetails();
+             vmdetails.MID= signInUser.MID;
+             vmdetails.ImageName = ddImageList.Text;
+             vmdetails.InstanceSize = ddInstanceSizes.Text;
+             vmdetails.VMName = txtVMName.Text;
         }
 
         private void PopulateVMInstanceSizes()
@@ -66,6 +76,14 @@ namespace WebRole.B_UI
                 ddImageList.Items.Add(image);
             }
 
+        }
+
+        private bool validate()
+        {
+            if (txtVMName == null || ddImageList.Text == null)
+                return false;
+
+            return true;
         }
     }
 }

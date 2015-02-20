@@ -23,5 +23,10 @@ namespace WebRole.B_Logic
            string errormsg;
            return (new PSHelper()).GetAzureImages(out errormsg);
         }
+
+        public void AddVMRequest()
+        { 
+
+        }
     }
 }

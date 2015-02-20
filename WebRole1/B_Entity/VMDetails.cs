@@ -16,7 +16,8 @@ namespace WebRole.B_Entity
         private string _UserName;
         private string _Passowrd;
         private string _Location;
-
+        private string _MID;
+               
         public string VMName
         {
             get { return _VMName; }
@@ -65,5 +66,11 @@ namespace WebRole.B_Entity
             get { return _Location; }
             set { _Location = value; }
         }
+        public string MID
+        {
+            get { return _MID; }
+            set { _MID = value; }
+        }
+
     }
 }
