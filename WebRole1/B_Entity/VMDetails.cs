@@ -11,13 +11,15 @@ namespace WebRole.B_Entity
         private string _VMName;
         private string _ImageName;
         private string _ServiceName;
-        private string _InstanceSize;
+        private int _InstanceSize;
         private string _Datadisk;
         private string _UserName;
         private string _Passowrd;
         private string _Location;
         private string _MID;
-               
+        private string _VMSize;
+
+          
         public string VMName
         {
             get { return _VMName; }
@@ -36,7 +38,7 @@ namespace WebRole.B_Entity
             set { _ServiceName = value; }
         }
 
-        public string InstanceSize
+        public int InstanceSize
         {
             get { return _InstanceSize; }
             set { _InstanceSize = value; }
@@ -71,6 +73,12 @@ namespace WebRole.B_Entity
             get { return _MID; }
             set { _MID = value; }
         }
+        public string VMSize
+        {
+            get { return _VMSize; }
+            set { _VMSize = value; }
+        }
+            
 
     }
 }

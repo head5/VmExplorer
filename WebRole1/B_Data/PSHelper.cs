@@ -63,14 +63,14 @@ namespace WebRole.B_Data
             {
                 runspace.Open();
                 Pipeline pipeline = runspace.CreatePipeline();
-                String scriptfile = System.Web.HttpContext.Current.Server.MapPath("App_Data/CreateVM.ps1");
+                String scriptfile = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/CreateVM.ps1");
                 Command myCommand = new Command(scriptfile);
 
                 CommandParameter Imagename = new CommandParameter("imageName", vmDetails.ImageName);
                 myCommand.Parameters.Add(Imagename);
                 CommandParameter VmName = new CommandParameter("vmName", vmDetails.VMName);
                 myCommand.Parameters.Add(VmName);
-                CommandParameter InstanceSize = new CommandParameter("instanceSize", vmDetails.InstanceSize);
+                CommandParameter InstanceSize = new CommandParameter("instanceSize", vmDetails.VMSize);
                 myCommand.Parameters.Add(InstanceSize);                
                 CommandParameter serviceName = new CommandParameter("serviceName", vmDetails.ServiceName);
                 myCommand.Parameters.Add(serviceName);
@@ -83,8 +83,7 @@ namespace WebRole.B_Data
                 
                 pipeline.Commands.Add(myCommand);
                 results = pipeline.Invoke();
-
-                return "VM Created Successfully....  Username: " + vmDetails.UserName + "  Password: " + vmDetails.Passowrd;
+                return "VM Created Successfully....  Username: " + vmDetails.UserName + "  Password: " + vmDetails.Passowrd + results.ToString();
             }
             catch (Exception ex)
             {
@@ -116,6 +115,6 @@ namespace WebRole.B_Data
             }
             return str;
         }
-
+   
     }
 }

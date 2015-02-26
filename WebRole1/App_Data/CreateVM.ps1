@@ -28,9 +28,7 @@
 Set-AzureSubscription -SubscriptionId d4732b22-2544-4835-b65e-5ad5b7f42c27 -CurrentStorageAccountName portalvhdssbm9zt69dcv0q
 
 $VM= New-AzureVMConfig -Name $vmName -InstanceSize $instanceSize -Image $imageName |
-       Add-AzureProvisioningConfig -Windows -AdminUserName $userName -Password $Password |
-       Add-AzureDataDisk -CreateNew -LUN 0 -DiskSizeInGB $dataDisk -DiskLabel "Data disk"    
-       
+       Add-AzureProvisioningConfig -Windows -AdminUserName $userName -Password $Password     
 
- New-AzureVM -ServiceName $serviceName -Location $Location -VMs $VM
+ New-AzureVM -ServiceName $serviceName -Location "$Location" -VMs $VM
 

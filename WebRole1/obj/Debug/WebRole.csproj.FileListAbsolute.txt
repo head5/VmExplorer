@@ -170,3 +170,4 @@ D:\Projects\WebAPI\VMExplorer\WebRole1\bin\zh-Hant\System.Spatial.resources.dll
 D:\Projects\WebAPI\VMExplorer\WebRole1\obj\Debug\WebRole.dll
 D:\Projects\WebAPI\VMExplorer\WebRole1\obj\Debug\WebRole.pdb
 D:\Projects\WebAPI\VMExplorer\WebRole1\obj\Debug\WebRole.csprojResolveAssemblyReference.cache
+D:\Projects\WebAPI\VMExplorer\WebRole1\bin\AzureSetup.cmd

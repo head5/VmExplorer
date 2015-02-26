@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ValidationIssue Include="WebRole|Microsoft.Management.Infrastructure.dll|WAT150">
+      <ProjectName>WebRole</ProjectName>
+      <FilenameWithExtension>Microsoft.Management.Infrastructure.dll</FilenameWithExtension>
+      <Code>WAT150</Code>
+      <FileFullPath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\Microsoft.Management.Infrastructure\v4.0_1.0.0.0__31bf3856ad364e35\Microsoft.Management.Infrastructure.dll</FileFullPath>
+      <WATMessage>True</WATMessage>
+      <Arguments>WebRole;C:\Windows\Microsoft.Net\assembly\GAC_MSIL\Microsoft.Management.Infrastructure\v4.0_1.0.0.0__31bf3856ad364e35\Microsoft.Management.Infrastructure.dll</Arguments>
+      <HelpKeyword>WATValidationIssueWarning</HelpKeyword>
+    </ValidationIssue>
+    <ValidationIssue Include="WebRole|Microsoft.Management.Infrastructure.Native.dll|WAT150">
+      <ProjectName>WebRole</ProjectName>
+      <FilenameWithExtension>Microsoft.Management.Infrastructure.Native.dll</FilenameWithExtension>
+      <Code>WAT150</Code>
+      <FileFullPath>C:\Windows\Microsoft.Net\assembly\GAC_64\Microsoft.Management.Infrastructure.Native\v4.0_1.0.0.0__31bf3856ad364e35\Microsoft.Management.Infrastructure.Native.dll</FileFullPath>
+      <WATMessage>True</WATMessage>
+      <Arguments>WebRole;C:\Windows\Microsoft.Net\assembly\GAC_64\Microsoft.Management.Infrastructure.Native\v4.0_1.0.0.0__31bf3856ad364e35\Microsoft.Management.Infrastructure.Native.dll</Arguments>
+      <HelpKeyword>WATValidationIssueWarning</HelpKeyword>
+    </ValidationIssue>
+    <ValidationIssue Include="WebRole|System.Management.Automation.dll|WAT150">
+      <ProjectName>WebRole</ProjectName>
+      <FilenameWithExtension>System.Management.Automation.dll</FilenameWithExtension>
+      <Code>WAT150</Code>
+      <FileFullPath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Management.Automation\v4.0_3.0.0.0__31bf3856ad364e35\System.Management.Automation.dll</FileFullPath>
+      <WATMessage>True</WATMessage>
+      <Arguments>WebRole;C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Management.Automation\v4.0_3.0.0.0__31bf3856ad364e35\System.Management.Automation.dll</Arguments>
+      <HelpKeyword>WATValidationIssueWarning</HelpKeyword>
+    </ValidationIssue>
+    <ValidationIssue Include="WebRole|web.config|WAT230">
+      <ProjectName>WebRole</ProjectName>
+      <FilenameWithExtension>web.config</FilenameWithExtension>
+      <Code>WAT230</Code>
+      <FileFullPath>web.config</FileFullPath>
+      <WATMessage>True</WATMessage>
+      <Arguments>DefaultConnection;(LocalDb)\v11.0;WebRole</Arguments>
+      <HelpKeyword>WATValidationIssueWarning</HelpKeyword>
+    </ValidationIssue>
+  </ItemGroup>
+</Project>

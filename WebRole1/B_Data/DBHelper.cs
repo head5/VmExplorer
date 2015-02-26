@@ -92,5 +92,13 @@ namespace WebRole.B_Data
             }
             return statuses;
         }
+
+        public void AddVMCreateRequest(VMDetails vmdetails)
+        {
+            string query = "Insert into VM_Request values('"+vmdetails.UserName+"','"+vmdetails.VMName+"','"+vmdetails.Passowrd+"','"+vmdetails.InstanceSize+"','"+vmdetails.ImageName+"','400','3')";
+
+            SqlDataReader reader = dbCon.ExecuteSqlCommand(query);
+
+        }
     }
 }

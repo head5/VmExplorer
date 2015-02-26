@@ -13,10 +13,12 @@ namespace WebRole
         protected void Page_Load(object sender, EventArgs e)
         {
             Session["USER"] = null;
+            new VMRequestHelper().SetupAzureAccount();
 
             // Code to run only once at a time of first load.
             if (!IsPostBack)
             {
+                
                 lblMessage.Text = "Enter credentials to Sign IN.";
             }
         }

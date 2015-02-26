@@ -15,13 +15,14 @@ namespace WebRole.B_UI
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!(Session["USER"] == null))
+            {
+                signInUser = (User)Session["USER"];
+            }
+
+            lblMessage.Text = "Lable is here...........";
             if (!IsPostBack)
             {
-                if (!(Session["USER"] == null))
-                {
-                    signInUser = (User)Session["USER"];
-                }
-
                // User authUser = new User("M1015156", "Anand", "P@ssw0rd1", true, true);
                 PopulateVMInstanceSizes();
                 PopulateVMOSImages();
@@ -42,12 +43,19 @@ namespace WebRole.B_UI
 
         protected void btnSubmit_Click(object sender, EventArgs e)
         {
-            if()
-            VMDetails vmdetails=new VMDetails();
-             vmdetails.MID= signInUser.MID;
-             vmdetails.ImageName = ddImageList.Text;
-             vmdetails.InstanceSize = ddInstanceSizes.Text;
-             vmdetails.VMName = txtVMName.Text;
+            if (validate())
+            {
+                VMDetails vmdetails = new VMDetails();
+                vmdetails.UserName = ((User)Session["USER"]).MID;
+                vmdetails.ImageName = ddImageList.Text;
+                vmdetails.InstanceSize = Int32.Parse(ddInstanceSizes.Text);
+                vmdetails.VMName = txtVMName.Text;
+
+                VMRequestHelper vmReqHelper = new VMRequestHelper();
+                vmReqHelper.AddVMRequestToDatabase(vmdetails);
+                
+            }
+            
         }
 
         private void PopulateVMInstanceSizes()
@@ -56,7 +64,7 @@ namespace WebRole.B_UI
 
             List<VMInstanceSize> vmInstSizes = vmReqHelper.GetInstanceSizes();
 
-            ddInstanceSizes.Items.Add(new ListItem("Select Instance Size", "-1"));
+            ddInstanceSizes.Items.Add(new ListItem("--------- Select Instance Size ----", "-1"));
             foreach (VMInstanceSize size in vmInstSizes)
             {
                 if (size.IsActive)
@@ -68,7 +76,7 @@ namespace WebRole.B_UI
         private void PopulateVMOSImages()
         {
             VMRequestHelper vmReqHelper = new VMRequestHelper();
-
+            ddImageList.Items.Add(new ListItem("------ Select Image Name ---", "-1"));
             List<string> imagesList = vmReqHelper.GetVMImages();
             foreach (String image in imagesList)
             {
@@ -80,9 +88,24 @@ namespace WebRole.B_UI
 
         private bool validate()
         {
-            if (txtVMName == null || ddImageList.Text == null)
+            if (txtVMName.Text == null)
+            {
+                lblMessage.Text = " VM Name Can not be blank.";
                 return false;
+               
+            }
+            else if (ddImageList.SelectedIndex == 0)
+            {
+                lblMessage.Text = "Please select Image name";
+                return false;
+            }
+            else if (ddInstanceSizes.SelectedIndex == 0)
+            {
+                lblMessage.Text = "Please select Instance Size";
+                return false;
+            }
 
+            else
             return true;
         }
     }

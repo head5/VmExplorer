@@ -24,9 +24,28 @@ namespace WebRole.B_Logic
            return (new PSHelper()).GetAzureImages(out errormsg);
         }
 
-        public void AddVMRequest()
-        { 
+        public void AddVMRequestToDatabase(VMDetails vmdetails)
+        {
+            vmdetails.Location = "East Asia";           
+            vmdetails.Passowrd = "achiever12!@";
+            vmdetails.ServiceName = "MINDTREE";
 
+            new DBHelper().AddVMCreateRequest(vmdetails);
+        }
+
+        public void SetupAzureAccount()
+        {
+            new PSHelper().SetupAzure();
+        }
+
+        public void GetPendingRequests()
+        {
+
+        }
+
+        public string CreateVM(VMDetails vmDetails) 
+        {
+            return new PSHelper().createVM(vmDetails);
         }
     }
 }
