@@ -38,5 +38,10 @@ namespace HelperLibrary.B_Data
 
             return command.ExecuteReader();
         }
+
+        public void SampleMethod()
+        {
+
+        }
     }
 }
