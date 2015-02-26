@@ -1,0 +1,5 @@
+D:\Projects\WebAPI\VMExplorer\HelperLibrary\bin\Debug\HelperLibrary.dll.config
+D:\Projects\WebAPI\VMExplorer\HelperLibrary\bin\Debug\HelperLibrary.dll
+D:\Projects\WebAPI\VMExplorer\HelperLibrary\bin\Debug\HelperLibrary.pdb
+D:\Projects\WebAPI\VMExplorer\HelperLibrary\obj\Debug\HelperLibrary.dll
+D:\Projects\WebAPI\VMExplorer\HelperLibrary\obj\Debug\HelperLibrary.pdb
