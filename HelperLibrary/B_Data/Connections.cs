@@ -38,5 +38,11 @@ namespace HelperLibrary.B_Data
 
             return command.ExecuteReader();
         }
+
+        public string ExecuteSqlStoredProc(string sqlQuery)
+	{
+		return "";
+	}
+
     }
 }
