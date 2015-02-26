@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<serviceModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="VMExplorer" generation="1" functional="0" release="0" Id="d904007a-dd4a-4d7f-8367-68163f938456" dslVersion="1.2.0.0" xmlns="http://schemas.microsoft.com/dsltools/RDSM">
+<serviceModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="VMExplorer" generation="1" functional="0" release="0" Id="772ec8f9-f9ed-44f1-a817-a30aa54f360d" dslVersion="1.2.0.0" xmlns="http://schemas.microsoft.com/dsltools/RDSM">
   <groups>
     <group name="VMExplorerGroup" generation="1" functional="0" release="0">
       <componentports>
@@ -272,14 +272,14 @@
     </group>
   </groups>
   <implements>
-    <implementation Id="e284aa75-7b5d-4c94-98ff-084ff18b9755" ref="Microsoft.RedDog.Contract\ServiceContract\VMExplorerContract@ServiceDefinition">
+    <implementation Id="e90caf11-3ad4-4fe9-ae9c-fdd8bdc3f3f8" ref="Microsoft.RedDog.Contract\ServiceContract\VMExplorerContract@ServiceDefinition">
       <interfacereferences>
-        <interfaceReference Id="88ae6679-42e4-4258-a534-f46ad295a8ad" ref="Microsoft.RedDog.Contract\Interface\WebRole:Endpoint1@ServiceDefinition">
+        <interfaceReference Id="5588896b-2d42-408e-88d2-a4c60c632e08" ref="Microsoft.RedDog.Contract\Interface\WebRole:Endpoint1@ServiceDefinition">
           <inPort>
             <inPortMoniker name="/VMExplorer/VMExplorerGroup/WebRole:Endpoint1" />
           </inPort>
         </interfaceReference>
-        <interfaceReference Id="e4c35dbe-df4a-411b-b13d-f752e40bdc51" ref="Microsoft.RedDog.Contract\Interface\WorkerRole:Microsoft.WindowsAzure.Plugins.RemoteForwarder.RdpInput@ServiceDefinition">
+        <interfaceReference Id="a159c6aa-7041-4e34-92b5-d1348e69573b" ref="Microsoft.RedDog.Contract\Interface\WorkerRole:Microsoft.WindowsAzure.Plugins.RemoteForwarder.RdpInput@ServiceDefinition">
           <inPort>
             <inPortMoniker name="/VMExplorer/VMExplorerGroup/WorkerRole:Microsoft.WindowsAzure.Plugins.RemoteForwarder.RdpInput" />
           </inPort>

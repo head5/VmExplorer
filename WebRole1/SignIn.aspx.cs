@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Web.UI;
-using WebRole.B_Entity;
-using WebRole.B_Logic;
+using HelperLibrary.B_Entity;
+using HelperLibrary.B_Logic;
 
 namespace WebRole
 {

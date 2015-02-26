@@ -163,6 +163,8 @@ D:\Projects\WebAPI\VMExplorer\VMExplorer\obj\Debug\WebRole\bin\fr\Microsoft.Data
 D:\Projects\WebAPI\VMExplorer\VMExplorer\obj\Debug\WebRole\bin\fr\Microsoft.Data.OData.resources.dll
 D:\Projects\WebAPI\VMExplorer\VMExplorer\obj\Debug\WebRole\bin\fr\Microsoft.Data.Services.Client.resources.dll
 D:\Projects\WebAPI\VMExplorer\VMExplorer\obj\Debug\WebRole\bin\fr\System.Spatial.resources.dll
+D:\Projects\WebAPI\VMExplorer\VMExplorer\obj\Debug\WebRole\bin\HelperLibrary.dll
+D:\Projects\WebAPI\VMExplorer\VMExplorer\obj\Debug\WebRole\bin\HelperLibrary.pdb
 D:\Projects\WebAPI\VMExplorer\VMExplorer\obj\Debug\WebRole\bin\it\Microsoft.Data.Edm.resources.dll
 D:\Projects\WebAPI\VMExplorer\VMExplorer\obj\Debug\WebRole\bin\it\Microsoft.Data.OData.resources.dll
 D:\Projects\WebAPI\VMExplorer\VMExplorer\obj\Debug\WebRole\bin\it\Microsoft.Data.Services.Client.resources.dll
@@ -197,8 +199,6 @@ D:\Projects\WebAPI\VMExplorer\VMExplorer\obj\Debug\WebRole\bin\Microsoft.Windows
 D:\Projects\WebAPI\VMExplorer\VMExplorer\obj\Debug\WebRole\bin\Microsoft.WindowsAzure.Storage.dll
 D:\Projects\WebAPI\VMExplorer\VMExplorer\obj\Debug\WebRole\bin\Microsoft.WindowsAzure.Storage.xml
 D:\Projects\WebAPI\VMExplorer\VMExplorer\obj\Debug\WebRole\bin\MonAgentListener.dll
-D:\Projects\WebAPI\VMExplorer\VMExplorer\obj\Debug\WebRole\bin\Newtonsoft.Json.dll
-D:\Projects\WebAPI\VMExplorer\VMExplorer\obj\Debug\WebRole\bin\Newtonsoft.Json.xml
 D:\Projects\WebAPI\VMExplorer\VMExplorer\obj\Debug\WebRole\bin\ru\Microsoft.Data.Edm.resources.dll
 D:\Projects\WebAPI\VMExplorer\VMExplorer\obj\Debug\WebRole\bin\ru\Microsoft.Data.OData.resources.dll
 D:\Projects\WebAPI\VMExplorer\VMExplorer\obj\Debug\WebRole\bin\ru\Microsoft.Data.Services.Client.resources.dll
