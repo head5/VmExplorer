@@ -44,5 +44,9 @@ namespace HelperLibrary.B_Data
 		return "";
 	}
 
+        public void SampleMethod()
+        {
+
+        }
     }
 }
