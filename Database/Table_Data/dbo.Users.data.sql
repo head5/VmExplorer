@@ -1,0 +1,7 @@
+INSERT INTO [dbo].[Users] ([MId], [Domain], [UserName], [Password], [Admin], [Active]) VALUES (N'M1012932', N'MINDTREE', N'Abhijeet Mali', N'P@ssw0rd1', N'N', N'Y')
+INSERT INTO [dbo].[Users] ([MId], [Domain], [UserName], [Password], [Admin], [Active]) VALUES (N'M1015156', N'MINDTREE', N'Anand Sabley', N'P@ssw0rd1', N'Y', N'Y')
+INSERT INTO [dbo].[Users] ([MId], [Domain], [UserName], [Password], [Admin], [Active]) VALUES (N'M1015157', N'MINDTREE', N'RDAuto', N'rdPa$$w0rd', N'Y', N'N')
+INSERT INTO [dbo].[Users] ([MId], [Domain], [UserName], [Password], [Admin], [Active]) VALUES (N'M1017133', N'MINDTREE', N'Pallavi Bhujange', N'P@ssw0rd1', N'N', N'Y')
+INSERT INTO [dbo].[Users] ([MId], [Domain], [UserName], [Password], [Admin], [Active]) VALUES (N'M1020226', N'MINDTREE', N'Pravin Wagh', N'P@ssw0rd1', N'Y', N'Y')
+INSERT INTO [dbo].[Users] ([MId], [Domain], [UserName], [Password], [Admin], [Active]) VALUES (N'M8070655', N'MINDTREE', N'Ashutosh Padki', N'P@ssw0rd1', N'N', N'Y')
+INSERT INTO [dbo].[Users] ([MId], [Domain], [UserName], [Password], [Admin], [Active]) VALUES (N'M8071657', N'MINDTREE', N'Shailesh Bhor', N'P@ssw0rd1', N'Y', N'Y')
