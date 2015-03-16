@@ -37,15 +37,28 @@ namespace WebRole
                 logInUser.Password = txtPassword.Text;
 
                 SignInHelper signInHelper = new SignInHelper();
-                string authResult = signInHelper.AuthenticateUser(logInUser);
+                string authResult = signInHelper.AuthenticateUser(logInUser, out logInUser);
 
 
                 if (authResult.Equals(Authentication_Result.Succeed.ToString(), StringComparison.CurrentCultureIgnoreCase))
                 {
                     Session["USER"] = logInUser;
 
-                    // Redirect to VM Creation Page
-                    Response.Redirect("~/B_UI/VMConfiguration.aspx");
+
+                    if (logInUser.IsAdmin)
+                    {
+                        Session["StatusTypes"] = new VMRequestHelper().GetStatusTypesForAdmin();
+
+                        // Redirect to VM Creation Page
+                        Response.Redirect("~/B_UI/AdminVMDashBoard.aspx");
+                    }
+                    else
+                    {
+                        Session["StatusTypes"] = new VMRequestHelper().GetStatusTypesForUser();
+
+                        // Redirect to VM Creation Page
+                        Response.Redirect("~/B_UI/VMDashBoard.aspx");
+                    }
                 }
                 else
                 {

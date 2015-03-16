@@ -7,78 +7,88 @@ namespace HelperLibrary.B_Entity
 {
     public class VMDetails
     {
+        private string _mid;
+        private string _vmname;
+        private string _imagename;
+        private string _servicename;
+        private string _instancesize;
+        private string _datadisk;
+        private string _username;
+        private string _passowrd;
+        private string _location;
+        private VMRequestStatus _status;
 
-        private string _VMName;
-        private string _ImageName;
-        private string _ServiceName;
-        private int _InstanceSize;
-        private string _Datadisk;
-        private string _UserName;
-        private string _Passowrd;
-        private string _Location;
-        private string _MID;
-        private string _VMSize;
+        public VMDetails()
+        {
+        }
 
-          
+        public VMDetails(string mid, string vmName, string vmInstanceSizeId, string imageName, string locationId)
+        {
+            _mid = mid;
+            _vmname = vmName;
+            _instancesize = vmInstanceSizeId;
+            _imagename = imageName;
+            _location = locationId;
+        }
+               
         public string VMName
         {
-            get { return _VMName; }
-            set { _VMName = value; }
+            get { return _vmname; }
+            set { _vmname = value; }
         }
 
         public string ImageName
         {
-            get { return _ImageName; }
-            set { _ImageName = value; }
+            get { return _imagename; }
+            set { _imagename = value; }
         }
 
         public string ServiceName
         {
-            get { return _ServiceName; }
-            set { _ServiceName = value; }
+            get { return _servicename; }
+            set { _servicename = value; }
         }
 
-        public int InstanceSize
+        public string InstanceSize
         {
-            get { return _InstanceSize; }
-            set { _InstanceSize = value; }
+            get { return _instancesize; }
+            set { _instancesize = value; }
         }
 
-        public string Datadisk
+        public string DataDisk
         {
-            get { return _Datadisk; }
-            set { _Datadisk = value; }
+            get { return _datadisk; }
+            set { _datadisk = value; }
         }
 
         public string UserName
         {
-            get { return _UserName; }
-            set { _UserName = value; }
+            get { return _username; }
+            set { _username = value; }
         }
 
-        public string Passowrd
+        public string Password
         {
-            get { return _Passowrd; }
-            set { _Passowrd = value; }
+            get { return _passowrd; }
+            set { _passowrd = value; }
         }
-
 
         public string Location
         {
-            get { return _Location; }
-            set { _Location = value; }
+            get { return _location; }
+            set { _location = value; }
         }
+
         public string MID
         {
-            get { return _MID; }
-            set { _MID = value; }
+            get { return _mid; }
+            set { _mid = value; }
         }
-        public string VMSize
-        {
-            get { return _VMSize; }
-            set { _VMSize = value; }
-        }
-            
 
+        public VMRequestStatus Status
+        {
+            get { return _status; }
+            set { _status = value; }
+        }
     }
 }

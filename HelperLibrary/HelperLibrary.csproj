@@ -46,10 +46,11 @@
     <Compile Include="B_Data\Connections.cs" />
     <Compile Include="B_Data\DBHelper.cs" />
     <Compile Include="B_Data\PSHelper.cs" />
+    <Compile Include="B_Entity\Entities.cs" />
     <Compile Include="B_Entity\User.cs" />
-    <Compile Include="B_Entity\VMDetails.cs" />
-    <Compile Include="B_Entity\VMInstanceSize.cs" />
-    <Compile Include="B_Entity\VMRequestStatus.cs" />
+    <Compile Include="B_Entity\VMDetails.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="B_Logic\SignInHelper.cs" />
     <Compile Include="B_Logic\VMRequestHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -61,8 +62,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="PSScripts\AzureSetup.ps1" />
-    <None Include="PSScripts\CreateVM.ps1" />
     <None Include="Config.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Config.Designer.cs</LastGenOutput>

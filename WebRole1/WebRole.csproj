@@ -239,6 +239,7 @@
     </Content>
     <Content Include="App_Data\AzureSetup.ps1" />
     <Content Include="App_Data\CreateVM.ps1" />
+    <Content Include="App_Data\GetImages.ps1" />
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.8.2.js" />
     <Content Include="Scripts\jquery-1.8.2.min.js" />

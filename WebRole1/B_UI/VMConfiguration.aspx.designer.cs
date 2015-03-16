@@ -31,6 +31,15 @@ namespace WebRole.B_UI {
         protected global::System.Web.UI.WebControls.DropDownList ddInstanceSizes;
         
         /// <summary>
+        /// ddLocation control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddLocation;
+        
+        /// <summary>
         /// ddImageList control.
         /// </summary>
         /// <remarks>

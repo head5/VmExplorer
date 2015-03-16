@@ -25,12 +25,12 @@
                 <asp:DropDownList ID="ddInstanceSizes" runat="server"><%--AutoPostBack="true"--%> 
                 </asp:DropDownList>
             </asp:TableCell>
-           <%-- <asp:TableCell HorizontalAlign="Right" BorderWidth="1">
-                Data Disk Size:
+            <asp:TableCell HorizontalAlign="Right" BorderWidth="0">
+                Expected Location:
             </asp:TableCell>
-            <asp:TableCell BorderWidth="1">
-                <asp:TextBox ID="txtDataDiskSize" runat="server" Width="50"></asp:TextBox>
-            </asp:TableCell>--%>
+            <asp:TableCell BorderWidth="0">
+                <asp:DropDownList ID="ddLocation" runat="server"></asp:DropDownList>
+            </asp:TableCell>
         </asp:TableRow>
            <asp:TableRow>
                <asp:TableCell HorizontalAlign="Right" BorderWidth="0">
@@ -42,22 +42,20 @@
             </asp:TableCell>
         </asp:TableRow>
         <asp:TableRow>
-            <asp:TableCell BorderWidth="0"></asp:TableCell>
-            <asp:TableCell HorizontalAlign="Center" BorderWidth="0">
+            <asp:TableCell ColumnSpan="2"></asp:TableCell>
+            <asp:TableCell ColumnSpan="2" HorizontalAlign="Right" BorderWidth="0">
                 <asp:Button ID="btnCancel" runat="server" Text="Cancel" Width="65" OnClick="btnCancel_Click" />
-            </asp:TableCell>
-            <asp:TableCell HorizontalAlign="NotSet" BorderWidth="0">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <asp:Button ID="btnClear" runat="server" Text="Clear" Width="65" OnClick="btnClear_Click" />
-            </asp:TableCell>
-            <asp:TableCell HorizontalAlign="Left" BorderWidth="0">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <asp:Button ID="btnSubmit" runat="server" Text="Submit Request" Width="120" OnClick="btnSubmit_Click"/>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </asp:TableCell>
         </asp:TableRow>
-      <asp:TableRow>
-              <asp:TableCell HorizontalAlign="Left" ColumnSpan="4">
-              <asp:Label ID="lblMessage" runat="server" Width="444"></asp:Label>
-              </asp:TableCell>
-    </asp:TableRow>
-
+        <asp:TableRow>
+            <asp:TableCell HorizontalAlign="Left" ColumnSpan="4">
+                <asp:Label ID="lblMessage" runat="server" Width="444"></asp:Label>
+            </asp:TableCell>
+        </asp:TableRow>
     </asp:Table>
 </asp:Content>

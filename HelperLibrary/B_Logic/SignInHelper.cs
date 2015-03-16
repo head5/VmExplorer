@@ -15,9 +15,10 @@ namespace HelperLibrary.B_Logic
         /// </summary>
         /// <param name="userCredentials">SignIN Credentials</param>
         /// <returns>Authentication Result</returns>
-        public string AuthenticateUser(User userCredentials)
+        public string AuthenticateUser(User userCredentials, out User authUser)
         {
             string result = Authentication_Result.Succeed.ToString();
+            authUser = new User();
 
             DBHelper dbHelper = new DBHelper();
             List<User> users = dbHelper.AuthenticateUser(userCredentials.MID);
@@ -28,16 +29,18 @@ namespace HelperLibrary.B_Logic
             }
             else
             {
-                User foundUser = users.FirstOrDefault(u => u.IsActive);
-                if (foundUser == null)
+                authUser = users.FirstOrDefault(u => u.IsActive);
+
+                if (authUser == null)
                 {
                     result = Authentication_Result.Inactive_User.ToString();
                 }
-                else if (!(foundUser.Password.Equals(userCredentials.Password, StringComparison.CurrentCulture)))
+                else if (!(authUser.Password.Equals(userCredentials.Password, StringComparison.CurrentCulture)))
                 {
                     result = Authentication_Result.Incorrect_Password.ToString();
                 }
             }
+
             return result;
         }
     }

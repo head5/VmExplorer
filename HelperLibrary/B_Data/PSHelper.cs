@@ -11,114 +11,213 @@ namespace HelperLibrary.B_Data
 {
     public class PSHelper
     {
-        Collection<PSObject> results = null;
-        static RunspaceConfiguration runspaceConfiguration = RunspaceConfiguration.Create();
-        Runspace runspace = RunspaceFactory.CreateRunspace(runspaceConfiguration); 
+        /// <summary>
+        /// Default Constructor
+        /// </summary>
         public PSHelper()
-        { 
-        
+        {
         }
 
-        public List<String> GetAzureImages(out string errormsg)
+        /// <summary>
+        /// Set-Up azure account for PowerShell
+        /// </summary>
+        /// <returns>Command Output</returns>
+        public string SetupAzureUsingRunspace()
         {
-            errormsg = null;
-            List<String> ImageList = new List<string>();
-            Collection<PSObject> result = null;
+            string output = string.Empty;
+            List<string> lstVmOsImages = new List<string>();
+
             try
             {
-                using (PowerShell PowerShellInstance = PowerShell.Create())
+                Command command = new Command(System.Web.HttpContext.Current.Server.MapPath("~/App_Data/AzureSetup.ps1"));
+                Collection<PSObject> psResult = RunPowerShellScript(command, out output);
+                if (psResult != null)
                 {
-                    PowerShellInstance.AddScript("Get-AzureVMImage |Select ImageName");
-                    result = PowerShellInstance.Invoke();
-                    while (result.Count == 0)
-                    {
-                        result = PowerShellInstance.Invoke();
-
-                    }
-
-                    foreach (PSObject obj in result)
+                    foreach (PSObject obj in psResult)
                     {
                         PSMemberInfoCollection<PSPropertyInfo> propInfos = obj.Properties;
-                        foreach (PSPropertyInfo propInfo in propInfos)
+                        foreach (PSPropertyInfo propInfo in propInfos.Where(prop => (prop.Value != null)))
                         {
-                            string propInfoValue = (propInfo.Value == null) ? "" : propInfo.Value.ToString();
-                            ImageList.Add(propInfoValue);
+                            output = string.Format("{0}{1}\t{2}{3}",
+                                output, propInfo.Value.ToString(), propInfo.Name, Environment.NewLine);
                         }
-
                     }
                 }
-                return ImageList;
+                else
+                {
+                    lstVmOsImages.Add(output);
+                }
             }
             catch (Exception ex)
             {
-                errormsg = ex.Message.ToString();
-            }            
-            return null;
+                output = string.Format("{0}Error{1}{2}", output, Environment.NewLine, ex.Message);
+            }
+
+            return output;
         }
 
-        public String createVM(VMDetails vmDetails)
+        /// <summary>
+        /// Gets Azure OS images using PowerShell
+        /// </summary>
+        /// <returns>list of Azure OS Images</returns>
+        public List<string> GetAzureImages()
         {
+            string output = string.Empty;
+            List<string> lstVmOsImages = new List<string>();
 
             try
             {
-                
-                runspace.Open();
-                Pipeline pipeline = runspace.CreatePipeline();
-                String scriptfile = System.Web.HttpContext.Current.Server.MapPath("~/PSScripts/CreateVM.ps1");
-                Command myCommand = new Command(scriptfile);
+                Collection<PSObject> psResult = new Collection<PSObject>();
+
+                using (PowerShell PowerShellInstance = PowerShell.Create())
+                {
+                    PowerShellInstance.AddScript("Get-AzureVMImage | Select ImageName");
+
+                    psResult = PowerShellInstance.Invoke();
+
+                    if (psResult.Count > 0)
+                    {
+                        foreach (PSObject psObject in psResult)
+                        {
+                            PSMemberInfoCollection<PSPropertyInfo> propInfos = psObject.Properties;
+                            foreach (PSPropertyInfo propInfo in propInfos.Where(prop => (prop.Value != null)))
+                            {
+                                lstVmOsImages.Add(propInfo.Value.ToString());
+                            }
+                        }
+                    }
+                    else
+                    {
+                        lstVmOsImages = GetAzureImagesUsingRunspace();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                lstVmOsImages = new List<string>();
+                lstVmOsImages.Add(string.Format("Error occurred while getting list of OS Images. {0}", ex.Message));
+            }
+            return lstVmOsImages;
+        }
+
+        /// <summary>
+        /// Create VM
+        /// </summary>
+        /// <param name="vmDetails">Details of VM</param>
+        /// <returns>VM Creation Result Message</returns>
+        public string CreateVM(VMDetails vmDetails)
+        {
+            string errMsg = string.Empty;
+            try
+            {
+                Command cmdCreateVM = new Command(System.Web.HttpContext.Current.Server.MapPath("~/App_Data/CreateVM.ps1"));
 
                 CommandParameter Imagename = new CommandParameter("imageName", vmDetails.ImageName);
-                myCommand.Parameters.Add(Imagename);
+                cmdCreateVM.Parameters.Add(Imagename);
                 CommandParameter VmName = new CommandParameter("vmName", vmDetails.VMName);
-                myCommand.Parameters.Add(VmName);
-                CommandParameter InstanceSize = new CommandParameter("instanceSize", vmDetails.VMSize);
-                myCommand.Parameters.Add(InstanceSize);                
+                cmdCreateVM.Parameters.Add(VmName);
+                CommandParameter InstanceSize = new CommandParameter("instanceSize", vmDetails.InstanceSize);
+                cmdCreateVM.Parameters.Add(InstanceSize);
                 CommandParameter serviceName = new CommandParameter("serviceName", vmDetails.ServiceName);
-                myCommand.Parameters.Add(serviceName);
+                cmdCreateVM.Parameters.Add(serviceName);
                 CommandParameter userName = new CommandParameter("userName", vmDetails.UserName);
-                myCommand.Parameters.Add(userName);
-                CommandParameter Password = new CommandParameter("Password", vmDetails.Passowrd);
-                myCommand.Parameters.Add(Password);
+                cmdCreateVM.Parameters.Add(userName);
+                CommandParameter Password = new CommandParameter("Password", vmDetails.Password);
+                cmdCreateVM.Parameters.Add(Password);
                 CommandParameter Location = new CommandParameter("Location", vmDetails.Location);
-                myCommand.Parameters.Add(Location);
-                
-                pipeline.Commands.Add(myCommand);
-                results = pipeline.Invoke();
-                return "VM Created Successfully....  Username: " + vmDetails.UserName + "  Password: " + vmDetails.Passowrd + results.ToString();
+                cmdCreateVM.Parameters.Add(Location);
+
+                Collection<PSObject> psResult = RunPowerShellScript(cmdCreateVM, out errMsg);
+
+                if (psResult.Count > 0)
+                {
+                    return "VM Created Successfully....  Username: " + vmDetails.UserName + "  Password: " + vmDetails.Password;
+                }
+                else
+                {
+                    return errMsg;
+                }
             }
             catch (Exception ex)
             {
                 return ex.Message.ToString();
             }
-
         }
 
-        public string SetupAzure()
+        /// <summary>
+        /// Gets Azure OS images using PowerShell using Runspace
+        /// </summary>
+        /// <returns>list of Azure OS Images</returns>
+        private List<string> GetAzureImagesUsingRunspace()
         {
-            String str = null;
-            using (PowerShell PowerShellInstance = PowerShell.Create())
-            {
-                // this script has a sleep in it to simulate a long running script                   
-                String scriptfile = System.Web.HttpContext.Current.Server.MapPath("~/PSScripts/AzureSetup.ps1");
-                PowerShellInstance.AddScript(scriptfile);
+            string output = string.Empty;
+            List<string> lstVmOsImages = new List<string>();
 
-                // begin invoke execution on the pipeline
-                Collection<PSObject> result = PowerShellInstance.Invoke();
-                foreach (PSObject obj in result)
+            try
+            {
+                Command command = new Command(System.Web.HttpContext.Current.Server.MapPath("~/App_Data/GetImages.ps1"));
+                Collection<PSObject> psResult = RunPowerShellScript(command, out output);
+
+                if (psResult != null)
                 {
-                    PSMemberInfoCollection<PSPropertyInfo> propInfos = obj.Properties;
-                    foreach (PSPropertyInfo propInfo in propInfos)
+                    foreach (PSObject obj in psResult)
                     {
-                        string propInfoValue = (propInfo.Value == null) ? "" : propInfo.Value.ToString();
-                        str += propInfoValue + "    " + propInfo.Name + "\n";
+                        PSMemberInfoCollection<PSPropertyInfo> propInfos = obj.Properties;
+                        foreach (PSPropertyInfo propInfo in propInfos.Where(prop => (prop.Value != null)))
+                        {
+                            lstVmOsImages.Add(propInfo.Value.ToString());
+                            //output = string.Format("{0}{1}\t{2}{3}",
+                            //    output, propInfo.Value.ToString(), propInfo.Name, Environment.NewLine);
+                        }
                     }
                 }
+                else
+                {
+                    lstVmOsImages.Add(output);
+                }
             }
-            return str;
+            catch (Exception ex)
+            {
+                lstVmOsImages.Add(string.Format("{0}Error{1}{2}", output, Environment.NewLine, ex.Message));
+            }
 
-
-
+            return lstVmOsImages;
         }
-   
+
+        /// <summary>
+        /// Runs the command returns the output in collection of objects
+        /// </summary>
+        /// <param name="command">PowerShell command object</param>
+        /// <param name="errMsg">Error Message if any</param>
+        /// <returns>Output in collection of objects</returns>
+        private Collection<PSObject> RunPowerShellScript(Command command, out string errMsg)
+        {
+            errMsg = string.Empty;
+
+            Collection<PSObject> psResult = new Collection<PSObject>();
+
+            RunspaceConfiguration runspaceConfiguration = RunspaceConfiguration.Create();
+            Runspace runspace = RunspaceFactory.CreateRunspace(runspaceConfiguration);
+            Pipeline pipeline = runspace.CreatePipeline();
+
+            pipeline.Commands.Add(command);
+            try
+            {
+                runspace.Open();
+                psResult = pipeline.Invoke();
+            }
+            catch (Exception ex)
+            {
+                errMsg = string.Format("Error while running script '{0}' : {1}",
+                    command.CommandText.Substring(command.CommandText.LastIndexOf("/")), ex.Message);
+                psResult = null;
+            }
+            finally
+            {
+                runspace.Close();
+            }
+
+            return psResult;
+        }
     }
 }

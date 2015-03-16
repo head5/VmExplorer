@@ -28,18 +28,14 @@ namespace WebRole.B_UI
             vmDetails.ServiceName = grdRow.Cells[1].Text.ToString();
             vmDetails.VMName = grdRow.Cells[2].Text.ToString();
             vmDetails.ImageName = grdRow.Cells[3].Text.ToString();
-            vmDetails.VMSize = grdRow.Cells[4].Text.ToString();
-           
-            vmDetails.Passowrd = newPassword;
+            vmDetails.InstanceSize = grdRow.Cells[4].Text.ToString();
+
+            vmDetails.Password = newPassword;
             vmDetails.Location = "East Asia";
 
-          string msg = new VMRequestHelper().CreateVM(vmDetails);
+            string msg = new VMRequestHelper().CreateVM(vmDetails);
 
-          TextBox1.Text = msg + "\n\n" + grdRow.Cells[0].Text + "\n" + grdRow.Cells[1].Text + "\n" + grdRow.Cells[2].Text + "\n" + grdRow.Cells[3].Text + "\n" + grdRow.Cells[4].Text + "\n" + newPassword;
-
-
+            TextBox1.Text = msg + "\n\n" + grdRow.Cells[0].Text + "\n" + grdRow.Cells[1].Text + "\n" + grdRow.Cells[2].Text + "\n" + grdRow.Cells[3].Text + "\n" + grdRow.Cells[4].Text + "\n" + newPassword;
         }
-
-        
     }
 }

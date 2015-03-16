@@ -4,49 +4,26 @@ namespace HelperLibrary.B_Data
 {
     public class Connections
     {
-        SqlConnection sqlCon;
-
+        private string cloudsqlConnection = string.Empty;
+        private string localSqllConnection = string.Empty;
+        
         /// <summary>
         /// Default Constructor
         /// </summary>
         public Connections()
         {
+            localSqllConnection = "Data Source=(localdb)\\Projects;Initial Catalog=DBVMExplorer;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False";
+            cloudsqlConnection = System.Configuration.ConfigurationManager.ConnectionStrings["DBCon"].ConnectionString;
         }
 
         /// <summary>
-        /// Create connection to SQL DB in cloud using Configured Connection String
+        /// Return Connection Object to SQL DB (local/cloud)
         /// </summary>
-        private void CreateCloudSQLDBConnection()
+        /// <returns>SQL Connection Object</returns>
+        public SqlConnection GetSQLConnection()
         {
-            //SQLDBConnection con = new SQLDBConnection();
-            sqlCon = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DBCon"].ConnectionString);
-            sqlCon.Open();
-        }
-
-        /// <summary>
-        /// Executes given query on database
-        /// </summary>
-        /// <param name="sqlQuery">SQL Query</param>
-        /// <returns>Result Set of Query Execution</returns>
-        public SqlDataReader ExecuteSqlCommand(string sqlQuery)
-        {
-            string result = string.Empty;
-
-            CreateCloudSQLDBConnection();
-
-            SqlCommand command = new SqlCommand(sqlQuery, sqlCon);
-
-            return command.ExecuteReader();
-        }
-
-        public string ExecuteSqlStoredProc(string sqlQuery)
-	{
-		return "";
-	}
-
-        public void SampleMethod()
-        {
-
+            return (new SqlConnection(localSqllConnection));
         }
     }
+
 }

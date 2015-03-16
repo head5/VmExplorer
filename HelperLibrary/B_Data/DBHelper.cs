@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using HelperLibrary.B_Entity;
+using System.Data;
 
 namespace HelperLibrary.B_Data
 {
@@ -25,8 +26,19 @@ namespace HelperLibrary.B_Data
         public List<User> AuthenticateUser(string userMID)
         {
             List<User> resultUsers = new List<User>();
-            string query = string.Format("SELECT MId, UserName, Password, Admin, Active FROM Users WHERE MId='{0}'", userMID);
-            SqlDataReader reader = dbCon.ExecuteSqlCommand(query);
+
+            SqlCommand cmd = new SqlCommand("GetUsers");
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            SqlParameter paramMID = cmd.Parameters.Add
+            ("@mid", System.Data.SqlDbType.VarChar, 11);
+            paramMID.Direction = ParameterDirection.Input;
+            paramMID.Value = userMID;
+
+            SqlConnection sqlCon = dbCon.GetSQLConnection();
+            sqlCon.Open();
+            cmd.Connection = sqlCon;
+            SqlDataReader reader = cmd.ExecuteReader();
 
             if (reader.HasRows)
             {
@@ -34,9 +46,9 @@ namespace HelperLibrary.B_Data
 
                 while (reader.Read())
                 {
-                    User dbuser = new User(reader.GetString(0), reader.GetString(1), reader.GetString(2),
-                        (reader.GetString(3).Equals("Y", StringComparison.CurrentCultureIgnoreCase) ? true : false),
-                        (reader.GetString(4).Equals("Y", StringComparison.CurrentCultureIgnoreCase) ? true : false));
+                    User dbuser = new User(reader.GetString(0), reader.GetString(1), reader.GetString(2), reader.GetString(3),
+                        (reader.GetString(4).Equals("Y", StringComparison.CurrentCultureIgnoreCase) ? true : false),
+                        (reader.GetString(5).Equals("Y", StringComparison.CurrentCultureIgnoreCase) ? true : false));
 
                     resultUsers.Add(dbuser);
                 }
@@ -46,24 +58,29 @@ namespace HelperLibrary.B_Data
         }
 
         /// <summary>
-        /// Querying the database for all VM Instance Sizes
+        /// Get List for all VM Instance Sizes
         /// </summary>
         /// <returns>Set of all VM Instance Sizes</returns>
-        public List<VMInstanceSize> GetVMInstanceSizes()
+        public List<InstanceSize> GetVMInstanceSizes()
         {
-            List<VMInstanceSize> vmSizes = new List<VMInstanceSize>();
-            string query = "SELECT ID, Name, Memory, Core, Active FROM VM_Instance_Size";
+            List<InstanceSize> vmSizes = new List<InstanceSize>();
 
-            SqlDataReader reader = dbCon.ExecuteSqlCommand(query);
+            SqlCommand cmd = new SqlCommand("GetVMInstanceSizes");
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            SqlConnection sqlCon = dbCon.GetSQLConnection();
+            sqlCon.Open();
+            cmd.Connection = sqlCon;
+            SqlDataReader reader = cmd.ExecuteReader();
 
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
-                    VMInstanceSize vmSize = new VMInstanceSize(reader.GetSqlInt32(0).Value, reader.GetString(1),
+                    InstanceSize vmSize = new InstanceSize(reader.GetSqlInt32(0).Value, reader.GetString(1),
                         reader.GetString(2), reader.GetString(3),
                         (reader.GetString(4).Equals("Y", StringComparison.CurrentCultureIgnoreCase) ? true : false));
-                    
+
                     vmSizes.Add(vmSize);
                 }
             }
@@ -71,21 +88,26 @@ namespace HelperLibrary.B_Data
         }
 
         /// <summary>
-        /// Querying the database for all Status types for VM Request
+        /// Get List of all Status types for VM Request
         /// </summary>
-        /// <returns>Set of all Status types</returns>
+        /// <returns>List of all Status types</returns>
         public List<VMRequestStatus> GetVMRequestStatus()
         {
             List<VMRequestStatus> statuses = new List<VMRequestStatus>();
-            string query = "SELECT Id, Status FROM VM_Request_Status";
 
-            SqlDataReader reader = dbCon.ExecuteSqlCommand(query);
+            SqlCommand cmd = new SqlCommand("GetVMRequestStatusTypes");
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            SqlConnection sqlCon = dbCon.GetSQLConnection();
+            sqlCon.Open();
+            cmd.Connection = sqlCon;
+            SqlDataReader reader = cmd.ExecuteReader();
 
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
-                    VMRequestStatus status = new VMRequestStatus(((int)reader.GetInt64(0)), reader.GetString(1));
+                    VMRequestStatus status = new VMRequestStatus(reader.GetSqlInt32(0).Value, reader.GetString(1));
 
                     statuses.Add(status);
                 }
@@ -93,12 +115,166 @@ namespace HelperLibrary.B_Data
             return statuses;
         }
 
-        public void AddVMCreateRequest(VMDetails vmdetails)
+        /// <summary>
+        /// Get all valid Locations
+        /// </summary>
+        /// <returns>List of Locations</returns>
+        public List<Location> GetLocations()
         {
-            string query = "Insert into VM_Request values('"+vmdetails.UserName+"','"+vmdetails.VMName+"','"+vmdetails.Passowrd+"','"+vmdetails.InstanceSize+"','"+vmdetails.ImageName+"','400','3')";
+            List<Location> locations = new List<Location>();
 
-            SqlDataReader reader = dbCon.ExecuteSqlCommand(query);
+            SqlCommand cmd = new SqlCommand("GetLocations");
+            cmd.CommandType = CommandType.StoredProcedure;
 
+            SqlConnection sqlCon = dbCon.GetSQLConnection();
+            sqlCon.Open();
+            cmd.Connection = sqlCon;
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    Location location = new Location(((int)reader.GetInt32(0)), reader.GetString(1));
+
+                    locations.Add(location);
+                }
+            }
+            return locations;
+        }
+
+        /// <summary>
+        /// Adds the VM Request in two tables: Details in one and Status in another.
+        /// </summary>
+        /// <param name="vmDetails">All Details/Configurations</param>
+        /// <param name="user">Current User</param>
+        /// <returns>TRUE if VM Request Added</returns>
+        public bool AddVMRequest(VMDetails vmDetails)
+        {
+            SqlCommand cmd = new SqlCommand("AddVMRequest");
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            SqlParameter paramMID = cmd.Parameters.Add("@mid", SqlDbType.VarChar, 11);
+            paramMID.Direction = ParameterDirection.Input;
+            paramMID.Value = vmDetails.MID;
+
+            SqlParameter paramVmName = cmd.Parameters.Add("@vm_name", SqlDbType.VarChar, 20);
+            paramVmName.Direction = ParameterDirection.Input;
+            paramVmName.Value = vmDetails.VMName;
+
+            SqlParameter paramVmInstanceSize = cmd.Parameters.Add("@vminstance_size_id", SqlDbType.Int);
+            paramVmInstanceSize.Direction = ParameterDirection.Input;
+            paramVmInstanceSize.Value = vmDetails.InstanceSize;
+
+            SqlParameter paramImageName = cmd.Parameters.Add("@image_name", SqlDbType.VarChar, 500);
+            paramImageName.Direction = ParameterDirection.Input;
+            paramImageName.Value = vmDetails.ImageName;
+
+            SqlParameter paramLocationID = cmd.Parameters.Add("@location_id", SqlDbType.Int);
+            paramLocationID.Direction = ParameterDirection.Input;
+            paramLocationID.Value = vmDetails.Location;
+
+            SqlParameter paramVmRequestStatus = cmd.Parameters.Add("@vm_request_status", SqlDbType.VarChar, 10);
+            paramVmRequestStatus.Direction = ParameterDirection.Input;
+            paramVmRequestStatus.Value = vmDetails.Status.Status;
+
+            SqlParameter paramVmRequestStatusID = cmd.Parameters.Add("@vm_request_status_id", SqlDbType.Int);
+            paramVmRequestStatusID.Direction = ParameterDirection.Input;
+            paramVmRequestStatusID.Value = vmDetails.Status.StatusID;
+
+            SqlParameter paramResult = new SqlParameter("@result", SqlDbType.VarChar, 25);
+            paramResult.Direction = ParameterDirection.Output;
+            cmd.Parameters.Add(paramResult);
+
+            SqlConnection sqlCon = dbCon.GetSQLConnection();
+            sqlCon.Open();
+            cmd.Connection = sqlCon;
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            return paramResult.Value.ToString().Equals("Success");
+        }
+
+        /// <summary>
+        /// Gets the VM Requests of given User and Of given Status Type
+        /// </summary>
+        /// <param name="userMID">User MID</param>
+        /// <param name="statusType">Request Status Type</param>
+        /// <returns>DataView of User Requests</returns>
+        public DataView GetUserVMRequests(string userMID, string statusType)
+        {
+            DataView dvRequests = new DataView();
+            try
+            {
+                string datasetName = "VMRequests";
+                DataSet dsVMRequests = new DataSet(datasetName);
+
+                SqlCommand cmd = new SqlCommand("GetVMRequestsOfUser");
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter paramMID = cmd.Parameters.Add("@mid", SqlDbType.VarChar, 11);
+                paramMID.Direction = ParameterDirection.Input;
+                paramMID.Value = userMID;
+
+                SqlParameter paramStatus = cmd.Parameters.Add("@status", SqlDbType.VarChar, 10);
+                paramStatus.Direction = ParameterDirection.Input;
+                paramStatus.Value = statusType;
+
+                SqlConnection sqlCon = dbCon.GetSQLConnection();
+                cmd.Connection = sqlCon;
+
+                
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                sqlCon.Open();
+
+                da.Fill(dsVMRequests);
+
+                dvRequests = dsVMRequests.Tables[0].DefaultView;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return dvRequests;
+        }
+
+        /// <summary>
+        /// Cancels the VM Request by calling Stored Procedure 'CancelVMRequest'
+        /// </summary>
+        /// <param name="requestID">VM Request ID to Cancel</param>
+        /// <param name="userID">Cancel by User</param>
+        /// <param name="status">Cancel Status Object</param>
+        /// <returns>TRUE if Cancelled successfully</returns>
+        public bool CancelVMRequest(int requestID, string userID, VMRequestStatus status)
+        {
+            SqlCommand cmd = new SqlCommand("CancelVMRequest");
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            SqlParameter paramRequestID = cmd.Parameters.Add("@request_id", SqlDbType.Int);
+            paramRequestID.Direction = ParameterDirection.Input;
+            paramRequestID.Value = requestID;
+            
+            SqlParameter paramMID = cmd.Parameters.Add("@mid", SqlDbType.VarChar, 11);
+            paramMID.Direction = ParameterDirection.Input;
+            paramMID.Value = userID;
+
+            SqlParameter paramVmRequestStatus = cmd.Parameters.Add("@vm_request_status", SqlDbType.VarChar, 10);
+            paramVmRequestStatus.Direction = ParameterDirection.Input;
+            paramVmRequestStatus.Value = status.Status;
+
+            SqlParameter paramVmRequestStatusID = cmd.Parameters.Add("@vm_request_status_id", SqlDbType.Int);
+            paramVmRequestStatusID.Direction = ParameterDirection.Input;
+            paramVmRequestStatusID.Value = status.StatusID;
+
+            SqlParameter paramResult = new SqlParameter("@result", SqlDbType.VarChar, 25);
+            paramResult.Direction = ParameterDirection.Output;
+            cmd.Parameters.Add(paramResult);
+
+            SqlConnection sqlCon = dbCon.GetSQLConnection();
+            sqlCon.Open();
+            cmd.Connection = sqlCon;
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            return paramResult.Value.ToString().Equals("Success");
         }
     }
 }

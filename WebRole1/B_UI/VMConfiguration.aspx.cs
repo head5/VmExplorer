@@ -11,29 +11,21 @@ namespace WebRole.B_UI
 {
     public partial class VMConfiguration : System.Web.UI.Page
     {
-        User signInUser;
-
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!(Session["USER"] == null))
-            {
-                signInUser = (User)Session["USER"];
-            }
-
-            lblMessage.Text = "Lable is here...........";
             if (!IsPostBack)
             {
-               // User authUser = new User("M1015156", "Anand", "P@ssw0rd1", true, true);
-                PopulateVMInstanceSizes();
-                PopulateVMOSImages();
+                VMRequestHelper vmReqHelper = new VMRequestHelper();
+                PopulateVMInstanceSizes(vmReqHelper);
+                PopulateVMOSImages(vmReqHelper);
+                PopulateLocations(vmReqHelper);
+                lblMessage.Text = "Set VM Configuration....";
             }
         }
 
         protected void btnClear_Click(object sender, EventArgs e)
         {
-            txtVMName.Text = string.Empty;            
-            ddInstanceSizes.SelectedIndex = -1;
-            txtVMName.Focus();
+            Reset("Set VM Configuration....");
         }
 
         protected void btnCancel_Click(object sender, EventArgs e)
@@ -43,29 +35,54 @@ namespace WebRole.B_UI
 
         protected void btnSubmit_Click(object sender, EventArgs e)
         {
-            if (validate())
+            if (ValidateVMConfiguration())
             {
-                VMDetails vmdetails = new VMDetails();
-                vmdetails.UserName = ((User)Session["USER"]).MID;
-                vmdetails.ImageName = ddImageList.Text;
-                vmdetails.InstanceSize = Int32.Parse(ddInstanceSizes.Text);
-                vmdetails.VMName = txtVMName.Text;
+                VMDetails vmConfiguration = new VMDetails();
+                vmConfiguration.MID = ((User)Session["USER"]).MID;
+                vmConfiguration.ServiceName = ((User)Session["USER"]).Domain;
+                vmConfiguration.ImageName = ddImageList.Text;
+                vmConfiguration.InstanceSize = ddInstanceSizes.Text;
+                vmConfiguration.VMName = txtVMName.Text;
+                vmConfiguration.Location = ddLocation.SelectedValue;
+                vmConfiguration.Status = GetDefaultVMRequestStatus();
 
                 VMRequestHelper vmReqHelper = new VMRequestHelper();
-                vmReqHelper.AddVMRequestToDatabase(vmdetails);
-                
+                if (vmReqHelper.AddVMRequest(vmConfiguration))
+                {
+                    Response.Redirect("~/B_UI/VMDashBoard.aspx");
+                }
+                else
+                {
+                    Reset("VM Request Failed. Contact Administrator.");
+                }
             }
-            
         }
 
-        private void PopulateVMInstanceSizes()
+        /// <summary>
+        /// Gets the list of Locations and populated the dropdown
+        /// </summary>
+        /// <param name="vmReqHelper">Object of helper</param>
+        private void PopulateLocations(VMRequestHelper vmReqHelper)
         {
-            VMRequestHelper vmReqHelper = new VMRequestHelper();
+            List<Location> locations = vmReqHelper.GetLocations();
 
-            List<VMInstanceSize> vmInstSizes = vmReqHelper.GetInstanceSizes();
+            ddLocation.Items.Add(new ListItem("--------- Select Location ----", "-1"));
+            foreach (Location location in locations)
+            {
+                ddLocation.Items.Add(new ListItem(location.LocationName, location.ID.ToString()));
+            }
+        }
+
+        /// <summary>
+        /// Gets the list of Instance Sizes and populated the dropdown
+        /// </summary>
+        /// <param name="vmReqHelper">Object of helper</param>
+        private void PopulateVMInstanceSizes(VMRequestHelper vmReqHelper)
+        {
+            List<InstanceSize> vmInstSizes = vmReqHelper.GetInstanceSizes();
 
             ddInstanceSizes.Items.Add(new ListItem("--------- Select Instance Size ----", "-1"));
-            foreach (VMInstanceSize size in vmInstSizes)
+            foreach (InstanceSize size in vmInstSizes)
             {
                 if (size.IsActive)
                 {
@@ -73,40 +90,79 @@ namespace WebRole.B_UI
                 }
             }
         }
-        private void PopulateVMOSImages()
+
+        /// <summary>
+        /// Runs the PowerShell script and gets the list of OS images
+        /// </summary>
+        /// <param name="vmReqHelper">List of OS(Win/Ubuntu) images</param>
+        private void PopulateVMOSImages(VMRequestHelper vmReqHelper)
         {
-            VMRequestHelper vmReqHelper = new VMRequestHelper();
             ddImageList.Items.Add(new ListItem("------ Select Image Name ---", "-1"));
             List<string> imagesList = vmReqHelper.GetVMImages();
-            foreach (String image in imagesList)
+            foreach (string image in imagesList.Where(img => (img.Contains("Windows-Server") || img.Contains("Ubuntu"))))
             {
-                if(image.Contains("Windows-Server")||image.Contains("Ubuntu"))
                 ddImageList.Items.Add(image);
             }
-
         }
 
-        private bool validate()
+        /// <summary>
+        /// Validates the selected configuration
+        /// </summary>
+        /// <returns>TRUE if valid</returns>
+        private bool ValidateVMConfiguration()
         {
             if (txtVMName.Text == null)
             {
-                lblMessage.Text = " VM Name Can not be blank.";
+                lblMessage.Text = " VM Name can not be blank.";
                 return false;
-               
             }
             else if (ddImageList.SelectedIndex == 0)
             {
-                lblMessage.Text = "Please select Image name";
+                lblMessage.Text = "Please select OS ImageName.";
                 return false;
             }
             else if (ddInstanceSizes.SelectedIndex == 0)
             {
-                lblMessage.Text = "Please select Instance Size";
+                lblMessage.Text = "Please select VM InstanceSize";
                 return false;
             }
 
-            else
             return true;
+        }
+
+        /// <summary>
+        /// Clears the data in controls
+        /// </summary>
+        /// <param name="lblMsg">Message to display in label</param>
+        private void Reset(string lblMsg)
+        {
+            txtVMName.Text = string.Empty;
+            ddInstanceSizes.SelectedIndex = -1;
+            ddImageList.SelectedIndex = -1;
+            ddLocation.SelectedIndex = -1;
+            lblMessage.Text = lblMsg;
+            txtVMName.Focus();
+        }
+
+        /// <summary>
+        /// Returns Default VM Request Status
+        /// </summary>
+        /// <returns>vm request status id</returns>
+        private VMRequestStatus GetDefaultVMRequestStatus()
+        {
+            List<VMRequestStatus> statuses = (List<VMRequestStatus>)Session["StatusTypes"];
+            if (statuses.Equals(null))
+            {
+                statuses = new VMRequestHelper().GetStatusTypesForUser();
+            }
+
+            VMRequestStatus status = statuses.First(s => s.Status.Contains("Pending"));
+            if (status.Equals(null))
+            {
+                return (new VMRequestStatus(1, "Pending"));
+            }
+
+            return status;
         }
     }
 }

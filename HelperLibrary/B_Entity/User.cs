@@ -16,6 +16,7 @@ namespace HelperLibrary.B_Entity
     public class User
     {
         private string _mid;
+        private string _domain;
         private string _username;
         private string _password;
         private bool _isadmin;
@@ -32,13 +33,15 @@ namespace HelperLibrary.B_Entity
         /// Fill User Details
         /// </summary>
         /// <param name="mid">User MID</param>
+        /// <param name="domain">User Domain/ServiceName</param>
         /// <param name="userName">User Name</param>
         /// <param name="password">User Password</param>
         /// <param name="isadmin">Is User Admin</param>
         /// <param name="isactive">Is User Active</param>
-        public User(string mid, string userName, string password, bool isadmin, bool isactive)
+        public User(string mid, string domain, string userName, string password, bool isadmin, bool isactive)
         {
             MID = mid;
+            _domain = domain;
             UserName = userName;
             Password = password;
             IsAdmin = isadmin;
@@ -49,6 +52,12 @@ namespace HelperLibrary.B_Entity
         {
             get { return _mid; }
             set { _mid = value; }
+        }
+
+        public string Domain
+        {
+            get { return _domain; }
+            set { _domain = value; }
         }
 
         public string UserName
